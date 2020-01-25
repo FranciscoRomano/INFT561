@@ -7,3 +7,6 @@
 #include "Win32.ConsoleBuffer.h"
 #include "Win32.ConsoleInstance.h"
 #include "Win32.ConsoleProperties.h"
+
+#ifdef __cplusplus
+#endif//__cplusplus

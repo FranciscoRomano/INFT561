@@ -33,7 +33,6 @@
             triangle.c1 = triangle.c1 + 0.5f;
             triangle.c2 = triangle.c2 + 0.5f;
             triangle.c3 = triangle.c3 + 0.5f;
-
             triangle.v1.x /= triangle.v1.w;
             triangle.v1.y /= triangle.v1.w;
 
@@ -43,7 +42,16 @@
             triangle.v3.x /= triangle.v3.w;
             triangle.v3.y /= triangle.v3.w;
 
-            ConsoleCanvas::render(triangle);
+            float cw = 0.0f;
+            cw += (triangle.v2.y - triangle.v1.y) * (triangle.v3.x - triangle.v2.x);
+            cw -= (triangle.v2.x - triangle.v1.x) * (triangle.v3.y - triangle.v2.y);
+            if (cw < 0.0f)
+            {
+
+
+                ConsoleCanvas::render(triangle);
+                //ConsoleCanvas::render();
+            }
         }
     }
 

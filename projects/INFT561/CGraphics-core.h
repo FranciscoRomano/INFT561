@@ -30,68 +30,68 @@
         struct CBuffer1f
         {
             int size;
-            float * buffer;
+            float * data;
             // CBuffer1f :: destructor
             inline ~CBuffer1f()
             {
-                if (this->buffer != nullptr) delete[] this->buffer;
+                if (this->data != nullptr) delete[] this->data;
             }
             // CBuffer1f :: constructor
             inline CBuffer1f()
             {
                 this->size = size;
-                this->buffer = nullptr;
+                this->data = nullptr;
             }
             // CBuffer1f :: clear buffer
             inline void clear()
             {
-                for (int i = 0; i < this->size; i++) this->buffer[i] = 0;
+                for (int i = 0; i < this->size; i++) this->data[i] = 0;
             }
             // CBuffer1f :: resize buffer
             inline void resize(const int size)
             {
-                if (this->buffer != nullptr) delete[] this->buffer;
+                if (this->data != nullptr) delete[] this->data;
                 this->size = size;
-                this->buffer = new float[size];
+                this->data = new float[size];
             }
             // CBuffer1f :: operator overloading []
             inline float & operator[](const int index)
             {
-                return this->buffer[index];
+                return this->data[index];
             }
         };
         // struct :: 4 float buffer
         struct CBuffer4f
         {
             int size;
-            Vector4f * buffer;
+            Vector4f * data;
             // CBuffer4f :: destructor
             inline ~CBuffer4f()
             {
-                if (this->buffer != nullptr) delete[] this->buffer;
+                if (this->data != nullptr) delete[] this->data;
             }
             // CBuffer4f :: constructor
             inline CBuffer4f()
             {
                 this->size = size;
-                this->buffer = nullptr;
+                this->data = nullptr;
             }
             // CBuffer4f :: clear buffer
             inline void clear()
             {
-                for (int i = 0; i < this->size; i++) this->buffer[i] = { 0, 0, 0, 0 };
+                for (int i = 0; i < this->size; i++) this->data[i] = { 0, 0, 0, 0 };
             }
             // CBuffer4f :: resize buffer
             inline void resize(const int size)
             {
-                if (this->buffer != nullptr) delete[] this->buffer;
+                if (this->data != nullptr) delete[] this->data;
                 this->size = size;
-                this->buffer = new Vector4f[size];
+                this->data = new Vector4f[size];
             }
             // CBuffer4f :: operator overloading []
             inline Vector4f & operator[](const int index)
             {
-                return this->buffer[index];
+                return this->data[index];
             }
         };
         // struct :: window information
@@ -270,7 +270,7 @@
                 ToScreen(&rInfo.vertex[1]);
                 ToScreen(&rInfo.vertex[2]);
                 // calculate steps
-                int steps = int(abs(data.v3.y - data.v1.y) + 1.0f);
+                int steps = int(abs(rInfo.vertex[2].y - rInfo.vertex[0].y) + 1.0f);
                 float delta = 1 / float(steps);
                 // iterate through lines
                 for (int i = 0; i <= steps; i++)
@@ -279,11 +279,11 @@
                     float t = delta * float(i);
                     // render line
                     RASTERIZE(Line{
-                        LERP(data.v1, data.v3, t),
-                        LERP(data.v2, data.v3, t),
-                        LERP(data.c1, data.c3, t),
-                        LERP(data.c2, data.c3, t),
-                        });
+                        LERP(rInfo.vertex[0], rInfo.vertex[2], t),
+                        LERP(rInfo.vertex[1], rInfo.vertex[2], t),
+                        LERP(rInfo.color[0], rInfo.color[2], t),
+                        LERP(rInfo.color[0], rInfo.color[2], t),
+                    });
                 }
             }
             // calculate complex triangle

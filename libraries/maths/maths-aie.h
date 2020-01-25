@@ -1,8 +1,6 @@
 #pragma once
 
 #include <cmath>
-#include <stdio.h>
-#include <stdarg.h>
 #include "maths.h"
 
 namespace maths

@@ -3,6 +3,8 @@
 #include <win32console/import.h>
 
 static UINT length = 0;
+static COORD coord = {};
+static SMALL_RECT region = {};
 static Win32::ConsoleBuffer buffer;
 static Win32::ConsoleInstance instance;
 static Win32::ConsoleProperties old_properties;
@@ -17,7 +19,7 @@ void ccon::cconInit()
     Win32::GetConsoleProperties(&instance, &old_properties);
     Win32::GetConsoleProperties(&instance, &new_properties);
 
-    // [properties] set font info
+    // set font info
     static char fontname[32] = "Terminal";
     new_properties.fontInfoEx.nFont = 0;
     new_properties.fontInfoEx.FontWeight = FW_NORMAL;
@@ -26,20 +28,20 @@ void ccon::cconInit()
     new_properties.fontInfoEx.dwFontSize.Y = 8;
     for (int i = 0; i < 32; i++) new_properties.fontInfoEx.FaceName[i] = fontname[i];
 
-    // [properties] set cursor info
+    // set cursor info
     new_properties.cursorPos = { 0, 0 };
     new_properties.cursorInfo.bVisible = FALSE;
 
-    // [properties] set input/output modes
+    // set input/output modes
     new_properties.modeIn = ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT | ENABLE_EXTENDED_FLAGS;
     new_properties.modeOut = 0;
 
-    // [properties] set screen buffer info
+    // set screen buffer info
     new_properties.screenBufferInfoEx.srWindow = { 0, 0, new_properties.screenBufferInfoEx.dwSize.X, new_properties.screenBufferInfoEx.dwSize.Y };
     new_properties.screenBufferInfoEx.dwCursorPosition = { 0, 0 };
     new_properties.screenBufferInfoEx.dwMaximumWindowSize = { new_properties.screenBufferInfoEx.dwSize.X, new_properties.screenBufferInfoEx.dwSize.Y };
 
-    // [properties] set window style
+    // set window style
     new_properties.style = WS_CAPTION | WS_SYSMENU | WS_VISIBLE;
 
     // set console properties
@@ -119,19 +121,23 @@ void ccon::cconAttrib(unsigned char n, int index)
 
 void ccon::cconViewport(int x, int y, int width, int height)
 {
-    buffer.writeCoord = { (SHORT)x, (SHORT)y };
-    buffer.writeRegion = { (SHORT)x, (SHORT)y, (SHORT)width, (SHORT)height };
+    coord = { (SHORT)x, (SHORT)y };
+    region = { (SHORT)x, (SHORT)y, (SHORT)width, (SHORT)height };
 }
 
 void ccon::cconDrawBuffer()
 {
-    Win32::WriteConsoleBufferA(&instance, &buffer);
+    Win32::WriteConsoleBufferA(&instance, &buffer, coord, &region);
+}
+
+void ccon::cconDrawBuffer(void* buffer)
+{
+    Win32::WriteConsoleBufferA(&instance, (Win32::ConsoleBuffer*)buffer, coord, &region);
 }
 
 void ccon::cconPixel(int x, int y, float r, float g, float b)
 {
     static CHAR ascii[] = { (CHAR)0x00, (CHAR)0xb0, (CHAR)0xb1, (CHAR)0xb2, (CHAR)0xDB };
-    //static CHAR ascii[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
     static float length = float(sizeof(ascii) - 1) + 0.015f;
 
     // calculate luminance (HSP Color Model)

@@ -16,5 +16,6 @@ namespace ccon
     void cconAttrib(unsigned char n, int index);
     void cconViewport(int x, int y, int width, int height);
     void cconDrawBuffer();
+    void cconDrawBuffer(void* buffer);
     void cconPixel(int x, int y, float r, float g, float b);
 };

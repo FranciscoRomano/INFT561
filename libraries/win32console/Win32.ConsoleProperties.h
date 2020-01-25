@@ -7,8 +7,7 @@
 #include <Windows.h>
 #include "Win32.ConsoleInstance.h"
 
-namespace Win32
-{
+namespace Win32 {
     /// <summary> [win32] console properties handle </summary>
     typedef struct ConsoleProperties {
         COORD                        cursorPos;          // cursor position
@@ -70,4 +69,4 @@ namespace Win32
     /// <param name="instance"> instance pointer </param>
     /// <param name="properties"> properties pointer </param>
     WINCALL void WINAPI SetConsolePropertyWindowStyle(ConsoleInstance* instance, ConsoleProperties* properties);
-}
+};

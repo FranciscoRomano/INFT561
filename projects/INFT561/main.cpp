@@ -6,6 +6,14 @@
 #include "graphics.h"
 #include "CGraphics.h"
 
+#include <maths/maths.vec.h>
+
+typedef maths::vec<float, 3> rgb;
+typedef maths::vec<float, 4> rgba;
+typedef maths::vec<float, 2> float2;
+typedef maths::vec<float, 3> float3;
+typedef maths::vec<float, 4> float4;
+
 #define C_PI 3.14159265358979323846
 
 int rand_seed = (int)(time(0));
@@ -18,9 +26,23 @@ int rand_fast()
 int main()
 {
     // CCON :: initiate
-    int size[2] = { 181, 121 };
+    //int size[2] = { 181, 121 };
+    int size[2] = { 180, 120 };
     CRenderer context(size[0], size[1]);
     const unsigned int model_size = 10;
+
+    float t[]{ 5.0f, 6.0f };
+
+    float4 v = { { 1.0f, 2.0f, 3.0f, 4.0f } };
+    float2 a = v.yx;
+    float2 b = v.zy;
+    float2 c = v.wz;
+    float2 d = v.wx;
+    float2 e = v.a;
+
+    a = v.x;
+    a = b.xx;
+    a = { 2.0f, 2.0f };
 
     try
     {
@@ -55,7 +77,7 @@ int main()
             context.clear();
 
             // MAT4 :: calculate projection matrix
-            projectionM4 = maths::perspective(70.0f, float(size[0]) / float(size[1]), 0.1f, 1000.0f) * maths::translate({ 0, 0, 20 });
+            projectionM4 = maths::perspective(70.0f, float(size[0]) / float(size[1]), 0.1f, 1000.0f) * maths::translate({ 0, 0, 25 });
 
             const int lineSize = 5;
             const float curTime = clock() / 1000.0f;

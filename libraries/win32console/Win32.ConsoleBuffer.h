@@ -7,14 +7,11 @@
 #include <Windows.h>
 #include "Win32.ConsoleInstance.h"
 
-namespace Win32
-{
+namespace Win32 {
     /// <summary> [win32] console buffer handle </summary>
     typedef struct ConsoleBuffer {
         CHAR_INFO* pCharInfo;   // buffer data
-        COORD      writeCoord;  // buffer position
         COORD      writeSize;   // buffer dimensions
-        SMALL_RECT writeRegion; // screen write region
     } ConsoleBuffer;
 
     /// <summary> [win32] allocate console buffer memory </summary>
@@ -65,10 +62,14 @@ namespace Win32
     /// <summary> [win32] write console buffer (ascii) </summary>
     /// <param name="instance"> instance pointer </param>
     /// <param name="buffer"> buffer pointer </param>
-    WINCALL void WINAPI WriteConsoleBufferA(ConsoleInstance* instance, ConsoleBuffer* buffer);
+    /// <param name="coord"> write coord </param>
+    /// <param name="region"> write region </param>
+    WINCALL void WINAPI WriteConsoleBufferA(ConsoleInstance* instance, ConsoleBuffer* buffer, const COORD& coord, const PSMALL_RECT& region);
 
     /// <summary> [win32] write console buffer (unicode) </summary>
     /// <param name="instance"> instance pointer </param>
     /// <param name="buffer"> buffer pointer </param>
-    WINCALL void WINAPI WriteConsoleBufferW(ConsoleInstance* instance, ConsoleBuffer* buffer);
-}
+    /// <param name="coord"> write coord </param>
+    /// <param name="region"> write region </param>
+    WINCALL void WINAPI WriteConsoleBufferW(ConsoleInstance* instance, ConsoleBuffer* buffer, const COORD& coord, const PSMALL_RECT& region);
+};

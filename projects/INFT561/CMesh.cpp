@@ -64,7 +64,7 @@ CMesh CMesh::Sphere(int sides)
 CMesh CMesh::Cylinder(int sides)
 {
     CMesh result;
-    if (sides < 4) sides = 4;
+    if (sides < 3) sides = 3;
     float angle = (2 * float(MESH_PI)) / sides;
     result.vertices.push_back(vec3(0, 0.5, 0));
     result.vertices.push_back(vec3(0,-0.5, 0));

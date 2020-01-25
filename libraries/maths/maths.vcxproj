@@ -21,6 +21,11 @@
   <ItemGroup>
     <ClInclude Include="maths-aie.h" />
     <ClInclude Include="maths.h" />
+    <ClInclude Include="maths.buf.h" />
+    <ClInclude Include="mat.h" />
+    <ClInclude Include="maths.mem.h" />
+    <ClInclude Include="maths.swz.h" />
+    <ClInclude Include="maths.vec.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="maths-core.cpp" />

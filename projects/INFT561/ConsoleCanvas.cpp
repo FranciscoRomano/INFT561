@@ -12,15 +12,12 @@
 		ccon::cconTerminate();
 	}
 
-	ConsoleCanvas::ConsoleCanvas(int width, int height)
+	ConsoleCanvas::ConsoleCanvas(int width, int height) : console{ (SHORT)width, (SHORT)height }, m_DBuffer{ width * height }
 	{
-		ccon::cconInit();
-		ccon::cconSize(width, height);
 		// initialize values
 		this->m_width = width;
 		this->m_height = height;
 		this->m_length = width * height;
-		this->m_DBuffer = new float[this->m_length];
 	}
 
 	// public functions
@@ -29,15 +26,14 @@
 		for (int i = 0; i < m_length; i++)
 		{
 			// clear buffers
+			console[i] = {};
 			m_DBuffer[i] = 0.0f;
-			ccon::cconAscii(0, i);
-			ccon::cconAttrib(0, i);
 		}
 	}
 
 	void ConsoleCanvas::render()
 	{
-		ccon::cconDrawBuffer();
+		console.writeA();
 	}
 
 	void ConsoleCanvas::render(Dot data)
@@ -126,7 +122,12 @@
 		// update depth buffer
 		m_DBuffer[index] = data.v1.z;
 		// [ccon] update colour buffer
-		ccon::cconPixel(x, y, data.c1.x * data.c1.w, data.c1.y * data.c1.w, data.c1.z * data.c1.w);
+		RASTERIZE(
+			y * m_width + x,
+			data.c1.x * data.c1.w,
+			data.c1.y * data.c1.w,
+			data.c1.z * data.c1.w
+		);
 	};
 
 	void ConsoleCanvas::RASTERIZE(const ConsoleCanvas::Line & data)
@@ -158,14 +159,12 @@
 		// update depth buffer
 		m_DBuffer[index] = data.v1.z;
 		// [ccon] update colour buffer
-	/*	ccon::cconUpdate(&m_surface, { data.cstring,
-			{ x, y },
-			{
-				int(data.c1.r * 255 * data.c1.a),
-				int(data.c1.g * 255 * data.c1.a),
-				int(data.c1.b * 255 * data.c1.a)
-			}
-		});*/
+		RASTERIZE(
+			y * m_width + x,
+			data.c1.x * data.c1.w,
+			data.c1.y * data.c1.w,
+			data.c1.z * data.c1.w
+		);
 	};
 
 	void ConsoleCanvas::RASTERIZE(const ConsoleCanvas::Triangle & data)
@@ -187,6 +186,26 @@
 			});
 		}
 	};
+
+	void ConsoleCanvas::RASTERIZE(const int& index, const float& r, const float& g, const float& b)
+	{
+		static CHAR ascii[] = { (CHAR)0x00, (CHAR)0xb0, (CHAR)0xb1, (CHAR)0xb2, (CHAR)0xDB };
+		static float length = float(sizeof(ascii) - 1) + 0.015f;
+
+		// calculate luminance (HSP Color Model)
+		float l = sqrtf(0.299f * powf(r, 2) + 0.587f * powf(g, 2) + 0.114f * powf(b, 2));
+
+		// calculate color
+		WORD color = 0;
+		if (l > 0.666f) color |= 0x88; else if (l > 0.333f) color |= 0x8;
+		if (r > 0.666f) color |= 0x44; else if (r > 0.333f) color |= 0x4;
+		if (g > 0.666f) color |= 0x22; else if (g > 0.333f) color |= 0x2;
+		if (b > 0.666f) color |= 0x11; else if (b > 0.333f) color |= 0x1;
+
+		// set char info
+		console[index] = { (WCHAR)ascii[int(l * length)], color };
+		//console.writeA();
+	}
 
 	void ConsoleCanvas::WORLD_TO_SCREEN(vec4 & point)
 	{

@@ -162,21 +162,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Buffer.h" />
+    <ClInclude Include="Color.h" />
     <ClInclude Include="ccon.h" />
-    <ClInclude Include="CGraphics.h" />
     <ClInclude Include="classes.h" />
     <ClInclude Include="CMesh.h" />
     <ClInclude Include="ConsoleCanvas.h" />
+    <ClInclude Include="Win32.Console.h" />
     <ClInclude Include="CRenderer.h" />
     <ClInclude Include="default.h" />
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="graphics.h" />
+    <ClInclude Include="maths.h" />
     <ClInclude Include="Mesh.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ccon.cpp" />
     <ClCompile Include="CMesh.cpp" />
     <ClCompile Include="ConsoleCanvas.cpp" />
+    <ClCompile Include="Win32.Console.cpp" />
     <ClCompile Include="CRenderer.cpp" />
     <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="main.cpp" />

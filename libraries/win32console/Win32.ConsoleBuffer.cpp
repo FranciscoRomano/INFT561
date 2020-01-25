@@ -2,12 +2,10 @@
 
 WINCALL void WINAPI Win32::AllocConsoleBuffer(const COORD& size, ConsoleBuffer* buffer)
 {
-    UINT length = UINT(max(size.X, 0)) * UINT(max(size.Y, 0));
+    UINT length = UINT(size.X) * UINT(size.Y);
 
     // set defaults
     buffer->writeSize = size;
-    buffer->writeCoord = { 0, 0 };
-    buffer->writeRegion = { 0, 0, SHORT(size.X - 1), SHORT(size.Y - 1) };
 
     // allocate char buffer
     buffer->pCharInfo = length ? new CHAR_INFO[length] : nullptr;
@@ -58,14 +56,14 @@ WINCALL void WINAPI Win32::SetConsoleBufferForeground(ConsoleBuffer* buffer, con
     buffer->pCharInfo[index].Attributes = buffer->pCharInfo[index].Attributes & 0xf0 | value;
 }
 
-WINCALL void WINAPI Win32::WriteConsoleBufferA(ConsoleInstance* instance, ConsoleBuffer* buffer)
+WINCALL void WINAPI Win32::WriteConsoleBufferA(ConsoleInstance* instance, ConsoleBuffer* buffer, const COORD& coord, const PSMALL_RECT& region)
 {
     // write console buffer ascii characters
-    WriteConsoleOutputA(instance->hOut, buffer->pCharInfo, buffer->writeSize, buffer->writeCoord, &buffer->writeRegion);
+    WriteConsoleOutputA(instance->hOut, buffer->pCharInfo, buffer->writeSize, coord, region);
 }
 
-WINCALL void WINAPI Win32::WriteConsoleBufferW(ConsoleInstance* instance, ConsoleBuffer* buffer)
+WINCALL void WINAPI Win32::WriteConsoleBufferW(ConsoleInstance* instance, ConsoleBuffer* buffer, const COORD& coord, const PSMALL_RECT& region)
 {
     // write console buffer unicode characters
-    WriteConsoleOutputW(instance->hOut, buffer->pCharInfo, buffer->writeSize, buffer->writeCoord, &buffer->writeRegion);
+    WriteConsoleOutputW(instance->hOut, buffer->pCharInfo, buffer->writeSize, coord, region);
 }
